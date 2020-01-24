@@ -13,7 +13,7 @@ let getChampInfo = async (req, res) => {
 ///checks for summoner name
 let getSummonerName = async (req, res) => {
 	let { name } = req.body;
-	let data = await axios.get(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/clarityremedy`, {
+	let data = await axios.get(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}`, {
 		headers: {
 			'Accept-Charset': 'application/x-www-form-urlencoded; charset=UTF-8',
 			'X-Riot-Token': LEAGUE_API
@@ -29,8 +29,15 @@ let getSummonerName = async (req, res) => {
 	let results = final.data;
 	let check = results;
 	check.push(data.data);
-	if (check) {
-		res.status(200).send(check);
+
+	let resultObject=check.reduce(function(acc, x) {
+		for (var key in x) acc[key] = x[key];
+		return acc;
+	}, {});
+
+
+	if (resultObject) {
+		res.status(200).send(resultObject);
 	}
 };
 //get match history
